@@ -1,0 +1,35 @@
+parameters:
+  name: ''
+  display_name: ''
+  pool: ''
+  project_title: ''
+  environment: ''
+  azure_service_connection: ''
+  app_name: ''
+  app_type: ''
+  artifact_name: 'Drop'
+  depends_on: ''
+  
+jobs:
+
+- deployment: ${{ parameters.name }}
+  displayName: ${{ parameters.display_name }}
+  environment: ${{ parameters.environment }}
+  pool: ${{ parameters.pool }}
+  condition: succeeded()
+  continueOnError: false
+  dependsOn: ${{ parameters.depends_on }}
+  strategy:
+    runOnce:
+      deploy:
+        steps:
+        
+        # Deploy Azure Service App
+        - task: AzureRmWebAppDeployment@4
+          displayName: 'Deploy Azure Service App - ${{ parameters.app_name }}'
+          inputs:
+            azureSubscription: ${{ parameters.azure_service_connection }}
+            appType: ${{ parameters.app_type }}
+            WebAppName: ${{ parameters.app_name }}
+            packageForLinux: '$(Pipeline.Workspace)/${{ parameters.artifact_name }}/${{ parameters.project_title }}.zip'
+        
