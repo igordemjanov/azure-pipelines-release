@@ -1,0 +1,57 @@
+parameters:
+  name: ''
+  display_name: ''
+  pool: ''
+  project_title: ''
+  environment: ''
+  azure_service_connection: ''
+  resource_group: ''
+  resource_group_location: ''
+  template: ''
+  template_parameters: ''
+  artifact_name: 'Drop'
+  depends_on: ''
+
+jobs:
+
+- deployment: ${{ parameters.name }}
+  displayName: ${{ parameters.display_name }}
+  environment: ${{ parameters.environment }}
+  pool: ${{ parameters.pool }}
+  condition: succeeded()
+  continueOnError: false
+  dependsOn: ${{ parameters.depends_on }}
+  strategy:
+    runOnce:
+      deploy:
+        steps:
+        
+        # Extract Files
+        - task: ExtractFiles@1
+          displayName: 'Extract files'
+          inputs:
+            archiveFilePatterns: '$(Pipeline.Workspace)/${{ parameters.artifact_name }}/${{ parameters.project_title }}.zip'
+            destinationFolder: '$(Pipeline.Workspace)/Deploy/${{ parameters.artifact_name }}'
+            cleanDestinationFolder: true
+        
+        # Validate ARM Template
+        - task: AzureResourceGroupDeployment@2
+          displayName: 'Validate ARM Template to Azure'
+          inputs:
+            azureSubscription: ${{ parameters.azure_service_connection }}
+            resourceGroupName: ${{ parameters.resource_group }}
+            location: ${{ parameters.resource_group_location }}
+            csmFile: '$(Pipeline.Workspace)/Deploy/${{ parameters.artifact_name }}/${{ parameters.template }}'
+            csmParametersFile: '$(Pipeline.Workspace)/Deploy/${{ parameters.artifact_name }}/${{ parameters.template_parameters }}'
+            deploymentMode: Validation
+        
+        # Deploy ARM Template
+        - task: AzureResourceGroupDeployment@2
+          displayName: 'Deploy ARM Template to Azure'
+          inputs:
+            azureSubscription: ${{ parameters.azure_service_connection }}
+            resourceGroupName: ${{ parameters.resource_group }}
+            location: ${{ parameters.resource_group_location }}
+            csmFile: '$(Pipeline.Workspace)/Deploy/${{ parameters.artifact_name }}/${{ parameters.template }}'
+            csmParametersFile: '$(Pipeline.Workspace)/Deploy/${{ parameters.artifact_name }}/${{ parameters.template_parameters }}'
+            deploymentMode: Incremental
