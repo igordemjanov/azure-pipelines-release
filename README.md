@@ -4,6 +4,9 @@ This repository contains Release templates, often referred as 'Continuous Delive
 
 ## Templates
 ### Azure App Service
+#### Description
+This job template deployes Azure App Service to Azure Cloud Services based on the provided parameters.
+
 #### Tasks included
 - [Azure App Service Deploy](https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-rm-web-app-deployment?view=azure-devops)
 
@@ -22,6 +25,9 @@ This repository contains Release templates, often referred as 'Continuous Delive
 | depends_on | Applicable if current job has a dependency on another job in the same pipeline. Provide Internal name of the job. |
 
 ### ARM Template
+#### Description
+This job template performs Azure Resource Group Deployment based on the provided parameters.
+
 #### Tasks included
 - [Extract Files](https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/utility/extract-files?view=azure-devops)
 - [Azure Resource Group Deployment (validate, deploy)](https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment?view=azure-devops)
