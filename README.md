@@ -5,7 +5,7 @@ This repository contains Release templates, often referred as 'Continuous Delive
 ## Templates
 ### Azure App Service
 #### Tasks included
-- Azure App Service Deploy
+- [Azure App Service Deploy](https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-rm-web-app-deployment?view=azure-devops)
 
 #### Parameters
 | Parameter | Description |
@@ -23,8 +23,8 @@ This repository contains Release templates, often referred as 'Continuous Delive
 
 ### ARM Template
 #### Tasks included
-- Extract Files
-- Azure Resource Group Deployment
+- [Extract Files](https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/utility/extract-files?view=azure-devops)
+- [Azure Resource Group Deployment (validate, deploy)](https://docs.microsoft.com/en-us/azure/devops/pipelines/tasks/deploy/azure-resource-group-deployment?view=azure-devops)
 
 #### Parameters
 | Parameter | Description |
