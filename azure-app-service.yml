@@ -1,7 +1,6 @@
 parameters:
   name: ''
   display_name: ''
-  pool: ''
   project_title: ''
   environment: ''
   azure_service_connection: ''
@@ -15,7 +14,8 @@ jobs:
 - deployment: ${{ parameters.name }}
   displayName: ${{ parameters.display_name }}
   environment: ${{ parameters.environment }}
-  pool: ${{ parameters.pool }}
+  pool:
+    vmImage: 'ubuntu-latest'
   condition: succeeded()
   continueOnError: false
   dependsOn: ${{ parameters.depends_on }}

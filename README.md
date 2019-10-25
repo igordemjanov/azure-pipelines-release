@@ -15,7 +15,6 @@ This job template deployes Azure App Service to Azure Cloud Services based on th
 |--|--|
 | name | Internal name of the job |
 | display_name | Display name of the job |
-| pool | Name of the Agent (more info [here](https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/pools-queues?view=azure-devops&tabs=yaml)) |
 | project_title | Title of the project |
 | environment | Name of the Environment in Azure Devops to perform a release |
 | azure_service_connection | Name of the Azure Service connection |
@@ -37,7 +36,6 @@ This job template performs Azure Resource Group Deployment based on the provided
 |--|--|
 | name | Internal name of the job |
 | display_name | Display name of the job |
-| pool | Name of the Agent (more info [here](https://docs.microsoft.com/en-us/azure/devops/pipelines/agents/pools-queues?view=azure-devops&tabs=yaml)) |
 | project_title | Title of the project |
 | environment | Name of the Environment in Azure Devops to perform a release |
 | azure_service_connection | Name of the Azure Service connection |
