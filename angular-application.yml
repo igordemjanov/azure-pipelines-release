@@ -1,0 +1,58 @@
+parameters:
+  name: ''
+  display_name: ''
+  project_title: ''
+  environment: ''
+  azure_service_connection: ''
+  target_resource: ''
+  storage_account: ''
+  storage_account_container: ''
+  web_app: ''
+  artifact_name: 'Drop'
+  depends_on: ''
+
+jobs:
+
+- deployment: ${{ parameters.name }}
+  displayName: ${{ parameters.display_name }}
+  environment: ${{ parameters.environment }}
+  pool:
+    vmImage: 'windows-2019'
+  condition: succeeded()
+  continueOnError: false
+  dependsOn: ${{ parameters.depends_on }}
+  strategy:
+    runOnce:
+      deploy:
+        steps:
+        
+        # Deploy to Azure Web App
+        - task: AzureRmWebAppDeployment@4
+          displayName: 'Deploy to Azure Web App'
+          inputs:
+            azureSubscription: ${{ parameters.azure_service_connection }}
+            WebAppName: ${{ parameters.web_app }}
+            packageForLinux: '$(Pipeline.Workspace)/${{ parameters.artifact_name }}/${{ parameters.project_title }}.zip'
+          condition: and(succeeded(), eq('${{ parameters.target_resource }}', 'web-app'))
+
+        # Extract Files
+        - task: ExtractFiles@1
+          displayName: 'Extract files'
+          inputs:
+            archiveFilePatterns: '$(Pipeline.Workspace)/${{ parameters.artifact_name }}/${{ parameters.project_title }}.zip'
+            destinationFolder: '$(Pipeline.Workspace)/Deploy/${{ parameters.artifact_name }}'
+            cleanDestinationFolder: true
+          condition: and(succeeded(), eq('${{ parameters.target_resource }}', 'storage-account'))
+        
+        # Deploy to Azure Storage Account ($web container)
+        - task: AzureFileCopy@3
+          displayName: 'Deploy to Azure Storage Account'
+          inputs:
+            SourcePath: '$(Pipeline.Workspace)/Deploy/${{ parameters.artifact_name }}'
+            azureSubscription: ${{ parameters.azure_service_connection }}
+            Destination: 'AzureBlob'
+            storage: ${{ parameters.storage_account }}
+            ContainerName: ${{ parameters.storage_account_container }}
+            cleanTargetBeforeCopy: true
+          condition: and(succeeded(), eq('${{ parameters.target_resource }}', 'storage-account'))
+        
